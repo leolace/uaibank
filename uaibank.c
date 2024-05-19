@@ -68,7 +68,7 @@ void transfer_money(int id_origin, int id_destination, User users[], int users_q
   return;
 }
 
-void remove_user(int id, User users[]) {
+void remove_user(int id, User users[], int *users_qnty) {
   int user_index = search_id(id, users, *users_qnty);
 
   if (user_index == -1) {
@@ -183,7 +183,7 @@ int main() {
       int id;
       printf("Digite o ID do usuário que deseja remover:\n-> ");
       scanf("%d", &id);
-      remove_user(id, users);
+      remove_user(id, users, &users_qnty);
       break;
     }
 
@@ -195,13 +195,18 @@ int main() {
 
   } while (opt <= 5 && opt > 0);
 
+  FILE *file;
+  file = fopen("file.txt", "a");
+
   for (int j = 0; j < users_qnty; j++) {
     if (users[j].id != 0) {
       printf("\n");
-      printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n", users[j].id, users[j].name, users[j].age, users[j].current_balance);  
+      printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n\n", users[j].id, users[j].name, users[j].age, users[j].current_balance);
+      fprintf(file, "%s, %d, %.2f\n", users[j].name, users[j].age, users[j].current_balance);
     }
   };
 
+  fclose(file);
   free(users);
 
   return 0;
