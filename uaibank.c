@@ -26,14 +26,35 @@ User* new_user(int users_qnty) {
     return NULL;
   }
 
-  printf("\nDigite o nome do usuário: \n");
-  scanf(" %100[^\n]", name);  
+  printf("Digite o nome do usuário: \n-> ");
+  scanf(" %100[^\n]", name);
 
-  printf("\nDigite a idade do usuário: \n");
-  scanf(" %d", &age);
+  while (strlen(name) > 100) {
+    printf("Digite o nome do usuário: \n-> ");
+    scanf(" %100[^\n]", name);
   
-  printf("\nDigite o saldo atual do usuário: \nR$ ");
+    printf("O nome deve ser menor que 100 caracteres\n");
+  }
+
+  printf("Digite a idade do usuário: \n-> ");
+  scanf(" %d", &age);
+
+  while (age < 0) {  
+    printf("Digite a idade do usuário: \n-> ");
+    scanf(" %d", &age);
+  
+    printf("A idade deve ser maior de zero.\n");
+  }
+  
+  printf("\nDigite o saldo atual do usuário: \n-> R$ ");
   scanf(" %f", &current_balance);
+
+  while (current_balance < 0) {
+    printf("Saldo deve ser maior ou igual a zero.\n");
+      
+    printf("Digite o saldo atual do usuário: \n-> R$ ");
+    scanf(" %f", &current_balance);
+  }
 
   user->id = users_qnty;
   strcpy(user->name, name);
@@ -196,15 +217,15 @@ int main() {
   } while (opt <= 5 && opt > 0);
 
   FILE *file;
-  file = fopen("file.txt", "a");
+  file = fopen("file.txt", "w");
 
-  for (int j = 0; j < users_qnty; j++) {
-    if (users[j].id != 0) {
-      printf("\n");
-      printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n\n", users[j].id, users[j].name, users[j].age, users[j].current_balance);
-      fprintf(file, "%s, %d, %.2f\n", users[j].name, users[j].age, users[j].current_balance);
-    }
+  for (int j = 1; j < users_qnty; j++) {
+    printf("\n");
+    printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n\n", users[j].id, users[j].name, users[j].age, users[j].current_balance);
+    fprintf(file, "%s, %d, %.2f\n", users[j].name, users[j].age, users[j].current_balance);
   };
+
+  printf("Dados gravados com sucesso em file.txt\n\n");
 
   fclose(file);
   free(users);
