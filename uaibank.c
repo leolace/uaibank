@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -77,7 +78,10 @@ int search_id(int id, User users[], int users_qnty) {
 }
 
 void transfer_money(int id_origin, int id_destination, User users[], int users_qnty, float amount) {
-  if (users[search_id(id_origin, users, users_qnty)].current_balance - amount < 0) {
+  if(search_id(id_origin, users, users_qnty) == -1 || search_id(id_destination, users, users_qnty) == -1){
+    printf("Algum dos usuários não foi encontrado.");
+    return;
+  } else if (users[search_id(id_origin, users, users_qnty)].current_balance - amount < 0) {
     printf("Saldo insuficiente.\n");
     return;
   };
@@ -107,6 +111,7 @@ void remove_user(int id, User users[], int *users_qnty) {
 const int MAX_USERS_SIZE = 20;
 
 int main() {
+  setlocale(LC_ALL, "Portuguese");
   int users_qnty = 1;
   User *users = malloc(MAX_USERS_SIZE * sizeof(User));
   int opt;
@@ -191,7 +196,7 @@ int main() {
       printf("Digite a quantia que deseja transferir\n-> R$ ");
       scanf("%f", &amount);
 
-      if (!id_origin || !id_destination) {
+      if (id_origin < 0 || id_destination < 0) {
 	printf("Digite um ID valido.\n");
         break;
       }
@@ -212,7 +217,11 @@ int main() {
       break;
     }
 
+    #ifdef _WIN32
+    Sleep(1);
+    #else
     sleep(1);
+    #endif
   } while (opt <= 5 && opt > 0);
 
   FILE *file;
