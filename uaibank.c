@@ -46,7 +46,7 @@ User* new_user(int users_qnty) {
     printf("A idade deve ser maior de zero.\n");
   }
   
-  printf("\nDigite o saldo atual do usuário: \n-> R$ ");
+  printf("Digite o saldo atual do usuário: \n-> R$ ");
   scanf(" %f", &current_balance);
 
   while (current_balance < 0) {
@@ -213,7 +213,6 @@ int main() {
     }
 
     sleep(1);
-
   } while (opt <= 5 && opt > 0);
 
   FILE *file;

@@ -1,0 +1,3 @@
+leonardo, 43, 23.00
+pedro, 12, 1234.00
+carlinhos maia, 65, 0.00
