@@ -3,12 +3,6 @@
 #include <string.h>
 #include <locale.h>
 
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <unistd.h>
-#endif
-
 typedef struct {
   int   id;
   char  name[101];
@@ -216,12 +210,6 @@ int main() {
     default:
       break;
     }
-
-    #ifdef _WIN32
-    Sleep(1);
-    #else
-    sleep(1);
-    #endif
   } while (opt <= 5 && opt > 0);
 
   FILE *file;
