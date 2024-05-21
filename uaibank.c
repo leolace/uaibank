@@ -72,16 +72,19 @@ int search_id(int id, User users[], int users_qnty) {
 }
 
 void transfer_money(int id_origin, int id_destination, User users[], int users_qnty, float amount) {
-  if(search_id(id_origin, users, users_qnty) == -1 || search_id(id_destination, users, users_qnty) == -1){
-    printf("Algum dos usuários não foi encontrado.");
+  int user_origin_index = search_id(id_origin, users, users_qnty);
+  int user_destination_index = search_id(id_destination, users, users_qnty);
+  
+  if(user_origin_index == -1 || user_destination_index == -1){
+    printf("Algum dos usuários não foi encontrado.\n");
     return;
-  } else if (users[search_id(id_origin, users, users_qnty)].current_balance - amount < 0) {
+  } else if (users[user_origin_index].current_balance - amount < 0) {
     printf("Saldo insuficiente.\n");
     return;
   };
   
-  users[search_id(id_origin, users, users_qnty)].current_balance -= amount;
-  users[search_id(id_destination, users, users_qnty)].current_balance += amount;
+  users[user_origin_index].current_balance -= amount;
+  users[user_destination_index].current_balance += amount;
 
   printf("Transferência entre usuários feita com sucesso!\n");
   return;
@@ -186,14 +189,14 @@ int main() {
       
       printf("Digite o ID de destino\n-> ");
       scanf("%d", &id_destination);
-      
-      printf("Digite a quantia que deseja transferir\n-> R$ ");
-      scanf("%f", &amount);
 
       if (id_origin < 0 || id_destination < 0) {
 	printf("Digite um ID valido.\n");
         break;
       }
+      
+      printf("Digite a quantia que deseja transferir\n-> R$ ");
+      scanf("%f", &amount);
       
       transfer_money(id_origin, id_destination, users, users_qnty, amount);
       
