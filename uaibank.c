@@ -5,31 +5,31 @@
 
 typedef struct {
   int   id;
-  char  name[101];
+  char  *name;
   int   age;
   float current_balance;
 } User;
 
 User* new_user(int users_qnty) {
-  char name[101];
+  char *name = (char*)malloc(101 * sizeof(char));
   int age = 0;
   float current_balance = 0.0;
   User *user = (User*)malloc(sizeof(User));
 
-  if (user == NULL) {
+  if (user == NULL || name == NULL) {
     printf("Error: memory allocation for user failed");
+    free(name);
     return NULL;
   }
 
-  printf("Digite o nome do usuário: \n-> ");
-  scanf(" %100[^\n]", name);
-
-  while (strlen(name) > 100) {
+  do {
     printf("Digite o nome do usuário: \n-> ");
-    scanf(" %100[^\n]", name);
-  
-    printf("O nome deve ser menor que 100 caracteres\n");
-  }
+    scanf(" %s", name);
+        
+    if (strlen(name) + 1 > 100) {
+      printf("O nome deve ter menos que 100 caracteres. Tente novamente.\n ");
+    }
+  } while (strlen(name) + 1 > 100);
 
   printf("Digite a idade do usuário: \n-> ");
   scanf(" %d", &age);
@@ -52,11 +52,12 @@ User* new_user(int users_qnty) {
   }
 
   user->id = users_qnty;
-  strcpy(user->name, name);
+  user->name = (char*)malloc(101 * sizeof(char));
+  snprintf(user->name, 101 * sizeof(char), name);
   user->age = age;
   user->current_balance = current_balance;
 
-  printf("\nUsuário %d adicionado com sucesso\n", user->id);
+  printf("\nUsuário %03d adicionado com sucesso\n", user->id);
 
   return user;
 }
@@ -108,7 +109,8 @@ void remove_user(int id, User users[], int *users_qnty) {
 const int MAX_USERS_SIZE = 20;
 
 int main() {
-  setlocale(LC_ALL, "Portuguese");
+  setlocale(LC_ALL, "Portuguese_Brasil.1252");
+  
   int users_qnty = 1;
   User *users = malloc(MAX_USERS_SIZE * sizeof(User));
   int opt;
@@ -166,7 +168,7 @@ int main() {
       int id;
       
       printf("Digite o id do usuário que deseja buscar:\n-> ");
-      scanf("%d", &id);
+      scanf("%03d", &id);
       
       int user_id = search_id(id, users, users_qnty);
 
@@ -177,7 +179,7 @@ int main() {
       
       User user_found = users[user_id];
       
-      printf("\nID: %d\nNome: %s\nIdade: %d\nSaldo atual: R$ %.2f\n", user_found.id, user_found.name, user_found.age, user_found.current_balance);
+      printf("\nID: %03d\nNome: %s\nIdade: %d\nSaldo atual: R$ %.2f\n", user_found.id, user_found.name, user_found.age, user_found.current_balance);
       break;
     }
     case 4: {
