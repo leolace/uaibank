@@ -147,6 +147,7 @@ int main() {
       scanf("%d", &users_qnty_in_row);
 
       for (int i = users_qnty_in_row; i > 0; i--) {
+	realloc(users, sizeof(users) + 1);
 	User *user = new_user(users_qnty);
 
 	      
