@@ -111,8 +111,8 @@ const int MAX_USERS_SIZE = 20;
 int main() {
   setlocale(LC_ALL, "Portuguese_Brasil.1252");
   
-  int users_qnty = 1;
-  User *users = malloc(MAX_USERS_SIZE * sizeof(User));
+  int users_qnty = 0;
+  User *users = malloc(sizeof(User));
   int opt;
 
   if (users == NULL) {
@@ -126,6 +126,7 @@ int main() {
 
     switch (opt) {
     case 1:
+      realloc(users, sizeof(users) + 1);
       User *user = new_user(users_qnty);
       
       if(user == NULL) {
@@ -136,7 +137,7 @@ int main() {
       
       memcpy(&users[users_qnty], user, sizeof(User));
       free(user);
-      
+
       users_qnty++;
       break;
     case 2: {
