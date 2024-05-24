@@ -111,8 +111,8 @@ const int MAX_USERS_SIZE = 20;
 int main() {
   setlocale(LC_ALL, "Portuguese_Brasil.1252");
   
-  int users_qnty = 0;
-  User *users = malloc(sizeof(User));
+  int users_qnty = 1;
+  User *users = (User*) malloc(sizeof(User));
   int opt;
 
   if (users == NULL) {
@@ -126,7 +126,8 @@ int main() {
 
     switch (opt) {
     case 1:
-      realloc(users, sizeof(users) + 1);
+      users = (User*) realloc(users, sizeof(User) * (users_qnty + 1));
+      
       User *user = new_user(users_qnty);
       
       if(user == NULL) {
@@ -147,7 +148,7 @@ int main() {
       scanf("%d", &users_qnty_in_row);
 
       for (int i = users_qnty_in_row; i > 0; i--) {
-	realloc(users, sizeof(users) + 1);
+	users = (User*) realloc(users, sizeof(User) * (users_qnty + 1));
 	User *user = new_user(users_qnty);
 
 	      
@@ -222,10 +223,16 @@ int main() {
   FILE *file;
   file = fopen("file.txt", "w");
 
-  for (int j = 1; j < users_qnty; j++) {
-    printf("\n");
-    printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n\n", users[j].id, users[j].name, users[j].age, users[j].current_balance);
-    fprintf(file, "%s, %d, %.2f\n", users[j].name, users[j].age, users[j].current_balance);
+  for (int j = 0; j < users_qnty; j++) {
+    int id = search_id(j, users, users_qnty);
+
+    if (id == -1) {
+      continue;
+    }
+
+    User user = users[id];
+    printf("ID: %d\nNome: %s\nIdade: %d\nSaldo atual: %.2f\n\n", user.id, user.name, user.age, user.current_balance);
+    fprintf(file, "%s, %d, %.2f\n", user.name, user.age, user.current_balance);
   };
 
   printf("Dados gravados com sucesso em file.txt\n\n");
