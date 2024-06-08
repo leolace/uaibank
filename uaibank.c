@@ -12,18 +12,18 @@ typedef struct {
 } User;
 
 void write_users_to_file(User *users, int users_qnty) {
-    FILE *file = fopen("file.txt", "w");
-    if (file == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
+  FILE *file = fopen("file.txt", "w");
+  if (file == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return;
+  }
 
-    for (int i = 0; i < users_qnty; i++) {
-        User user = users[i];
-        fprintf(file, "%d, %s, %d, %.2f\n", user.id, user.name, user.age, user.current_balance);
-    }
+  for (int i = 0; i < users_qnty; i++) {
+    User user = users[i];
+    fprintf(file, "%d, %s, %d, %.2f\n", user.id, user.name, user.age, user.current_balance);
+  }
 
-    fclose(file);
+  fclose(file);
 }
 
 int random_number() {
@@ -214,7 +214,7 @@ void remove_user(int searching_id, User **users, int *users_qnty) {
     (*users)[j] = (*users)[j + 1];
   }
   
-   (*users_qnty) -= 1;
+  (*users_qnty) -= 1;
 
   User *new_users = realloc(*users, sizeof(User) * (*users_qnty));
   if (new_users == NULL && *users_qnty > 0) {
