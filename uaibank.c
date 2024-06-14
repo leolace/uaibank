@@ -107,11 +107,11 @@ int parse_users(User **users) {
   char line[256];
   int index = 0;
   User *tempUsers = NULL;
-  FILE *file = fopen("file.txt", "r");
+  FILE *file = fopen("file.txt", "r+");
 
   printf("Carregando banco de dados...\n");
 
-  while(fgets(line, sizeof(line), file)) {
+  while(fgets(line, sizeof(line), file) != NULL) {
     line[strcspn(line, "\n")] = 0;
     if (line[0] == '\0') {
       continue;
