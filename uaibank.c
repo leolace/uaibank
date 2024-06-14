@@ -11,6 +11,8 @@ typedef struct {
   float current_balance;
 } User;
 
+int search_index_by_id(int id, User users[], int users_qnty);
+
 void write_users_to_file(User *users, int users_qnty) {
   FILE *file = fopen("file.txt", "w");
   if (file == NULL) {
@@ -31,6 +33,16 @@ int random_number() {
   int random_number = rand() % 1000 + 1;
 
   return random_number;
+}
+
+int get_new_user_id(User *users, int users_qnty) {
+  int id = random_number();
+  
+  if (search_index_by_id(id, users, users_qnty) != -1) {
+    return get_new_user_id(users, users_qnty);
+  }
+
+  return id;
 }
 
 User* parse_user_line(char *line) {
@@ -121,7 +133,7 @@ int parse_users(User **users) {
   return index;
 }
 
-User* new_user(int users_qnty) {
+User* new_user(int users_qnty, User *users) {
   char *name = (char*)malloc(101 * sizeof(char));
   int age = 0;
   float current_balance = 0.0;
@@ -162,7 +174,7 @@ User* new_user(int users_qnty) {
     scanf(" %f", &current_balance);
   }
 
-  user->id = random_number();
+  user->id = get_new_user_id(users, users_qnty);
   user->name = (char*)malloc(101 * sizeof(char));
   snprintf(user->name, 101 * sizeof(char), name);
   user->age = age;
@@ -237,20 +249,22 @@ int main() {
     return 1;
   }
   
-  char opt;
+  int opt;
   int users_qnty = added_users;
 
   printf("############ BEM-VIND@ AO UAIBANK! ############\n");
+
+  printf("%d", (int)(0));
   
   do {
     printf("\nSelecione uma opção: \n[1] - Criar um novo usuário\n[2] - Criar multiplos novos usuários\n[3] - Buscar um usuário por ID\n[4] - Transferência de saldo entre usuários\n[5] - Deletar um usuário por ID\n[qualquer outra tecla] - Sair\n-> ");
-    scanf(" %c", &opt);    
+    scanf(" %d", &opt);
 
     switch (opt) {
-    case '1':
+    case 1:
       printf("\n------- CRIAR NOVO USUARIO -------\n");
       users = (User*) realloc(users, sizeof(User) * (users_qnty + 1));
-      User *user = new_user(users_qnty);
+      User *user = new_user(users_qnty, users);
       
       if(user == NULL) {
 	free(users);
@@ -265,7 +279,7 @@ int main() {
       free(user);
       users_qnty++;
       break;
-    case '2':
+    case 2:
       printf("\n------- CRIAR MULTIPLOS USUARIOS -------\n");
       int users_qnty_in_row = 0;
 
@@ -274,7 +288,7 @@ int main() {
 
       for (int i = users_qnty_in_row; i > 0; i--) {
 	users = (User*) realloc(users, sizeof(User) * (users_qnty + 1));
-	User *user = new_user(users_qnty);
+	User *user = new_user(users_qnty, users);
 	      
 	if(user == NULL) {
 	  free(users);
@@ -292,7 +306,7 @@ int main() {
 
       printf("Operação concluída. %d usuários adicionados\n", users_qnty_in_row);
       break;
-    case '3':
+    case 3:
       printf("\n------- PROCURAR USUARIO -------\n");
       int id;
       printf("Digite o id do usuário que deseja buscar:\n-> ");
@@ -309,7 +323,7 @@ int main() {
       
       printf("\nID: %03d\nNome: %s\nIdade: %d\nSaldo atual: R$ %.2f\n", user_found.id, user_found.name, user_found.age, user_found.current_balance);
       break;
-    case '4':
+    case 4:
       printf("\n------- TRANSFERENCIA -------\n");
       int id_origin, id_destination;
       float amount = 0.0;
@@ -330,7 +344,7 @@ int main() {
       
       transfer_money(id_origin, id_destination, users, users_qnty, amount);
       break;
-    case '5': {
+    case 5: {
       printf("\n------- DELETAR USUARIO -------\n");
       int id;
       printf("Digite o ID do usuário que deseja remover:\n-> ");
@@ -343,7 +357,7 @@ int main() {
     default:
       break;
     }
-  } while (atoi(&opt) <= 5 && atoi(&opt) > 0);
+  } while (opt <= 5 && opt > 0);
 
   write_users_to_file(users, users_qnty);
   printf("Dados gravados com sucesso em file.txt\n\n");
