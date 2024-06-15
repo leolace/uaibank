@@ -107,7 +107,11 @@ int parse_users(User **users) {
   char line[256];
   int index = 0;
   User *tempUsers = NULL;
-  FILE *file = fopen("file.txt", "r+");
+  FILE *file = fopen("file.txt", "r");
+
+  if (file == NULL) {
+    file = fopen("file.txt", "w");
+  }
 
   printf("Carregando banco de dados...\n");
 
@@ -254,8 +258,6 @@ int main() {
 
   printf("############ BEM-VIND@ AO UAIBANK! ############\n");
 
-  printf("%d", (int)(0));
-  
   do {
     printf("\nSelecione uma opção: \n[1] - Criar um novo usuário\n[2] - Criar multiplos novos usuários\n[3] - Buscar um usuário por ID\n[4] - Transferência de saldo entre usuários\n[5] - Deletar um usuário por ID\n[qualquer outra tecla] - Sair\n-> ");
     scanf(" %d", &opt);
